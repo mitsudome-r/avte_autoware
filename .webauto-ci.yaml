@@ -70,3 +70,4 @@ simulations:
               sensor_model: sample_sensor_kit
               vehicle_model: sample_vehicle
               map_path: ${map_path}
+              scenario_simulation: "true"
