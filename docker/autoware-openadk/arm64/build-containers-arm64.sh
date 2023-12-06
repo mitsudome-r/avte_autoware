@@ -3,18 +3,16 @@
 set -e
 
 SCRIPT_DIR=$(readlink -f "$(dirname "$0")")
-WORKSPACE_ROOT="$SCRIPT_DIR/../../"
-
+WORKSPACE_ROOT="$SCRIPT_DIR/../../../"
+source "$WORKSPACE_ROOT/amd64.env"
 
 # https://github.com/docker/buildx/issues/484
 export BUILDKIT_STEP_LOG_MAX_SIZE=10000000
-
-source "$WORKSPACE_ROOT/amd64.env"
 export rosdistro
 
 set -x
 # Build base images
-docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
+docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/../docker-bake.hcl" \
     --set "*.context=$WORKSPACE_ROOT" \
     --set "*.ssh=default" \
     --set "*.platform=aarch64" \
@@ -26,7 +24,7 @@ docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
     --set "prebuilt.tags=ghcr.io/autowarefoundation/autoware-openadk:prebuilt-$rosdistro-aarch64"
 
 # Build runtime images
-docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
+docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/../docker-bake.hcl" \
     --set "*.context=$WORKSPACE_ROOT" \
     --set "*.ssh=default" \
     --set "*.platform=aarch64" \
