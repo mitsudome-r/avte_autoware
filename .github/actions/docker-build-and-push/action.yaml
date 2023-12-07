@@ -77,7 +77,17 @@ runs:
           latest=false
           prefix=${{ inputs.tag-prefix }}
           suffix=-prebuilt${{ inputs.tag-suffix }}
-
+    - name: Docker meta for base
+      id: meta-base
+      uses: docker/metadata-action@v4
+      with:
+        images: ghcr.io/${{ github.repository_owner }}/${{ inputs.bake-target }}
+        tags: ${{ steps.set-docker-tags.outputs.tags }}
+        bake-target: docker-metadata-action-base
+        flavor: |
+          latest=false
+          prefix=${{ inputs.tag-prefix }}
+          suffix=-prebuilt${{ inputs.tag-suffix }}
     - name: Login to GitHub Container Registry
       if: ${{ github.event_name != 'pull_request' }}
       uses: docker/login-action@v2
@@ -93,6 +103,7 @@ runs:
         push: ${{ github.event_name == 'schedule' || github.ref_name == github.event.repository.default_branch || github.event_name == 'push'}}
         files: |
           docker/${{ inputs.bake-target }}/docker-bake.hcl
+          ${{ steps.meta-base.outputs.bake-file }}
           ${{ steps.meta-devel.outputs.bake-file }}
           ${{ steps.meta-prebuilt.outputs.bake-file }}
         set: |
