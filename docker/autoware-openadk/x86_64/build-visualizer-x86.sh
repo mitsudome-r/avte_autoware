@@ -34,6 +34,7 @@ docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/../docker-bake.hcl" \
     --set "visualizer.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-visualizer-x86_64" \
     visualizer
 
+set +x
+
 #TO-DO
 # upload containers via github actions
-set +x
