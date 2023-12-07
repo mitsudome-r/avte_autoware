@@ -31,7 +31,7 @@ docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/../docker-bake.hcl" \
     --set "*.args.PLATFORM=aarch64" \
     --set "*.args.ROS_DISTRO=$rosdistro" \
     --set "*.args.BASE_IMAGE=$base_image" \
-    --set "planning-control.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-planning-before-$platform" \
+    --set "planning-control.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-planning-before-aarch64" \
     --set "simulator.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-simulator-aarch64" \
     planning-control simulator
 
