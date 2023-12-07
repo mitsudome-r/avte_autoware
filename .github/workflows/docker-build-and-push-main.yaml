@@ -38,7 +38,7 @@ jobs:
       - name: Build 'autoware-universe'
         uses: ./.github/actions/docker-build-and-push
         with:
-          bake-target: autoware-openadkit
+          bake-target: autoware-openadk
           build-args: |
             *.platform=linux/amd64
             *.args.ROS_DISTRO=${{ env.rosdistro }}
