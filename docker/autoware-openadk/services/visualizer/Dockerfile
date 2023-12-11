@@ -12,6 +12,33 @@ FROM base as visualizer
 COPY --from=prebuilt /autoware/install/ /autoware/install/
 COPY autoware.repos /autoware/
 
+# Dependencies
+RUN --mount=type=ssh \
+  mkdir src \
+  && vcs import src < autoware.repos \
+  && apt-get update \
+  && rosdep update \
+  && DEBIAN_FRONTEND=noninteractive rosdep install -y --rosdistro "$ROS_DISTRO" --ignore-src --from-paths src --skip-keys pacmod3_msgs \
+  && apt-get clean \
+  && find /usr/lib/$PLATFORM-linux-gnu -name "*.a" -type f -delete \
+  && find / -name "*.o" -type f -delete \
+  && find / -name "*.h" -type f -delete \
+  && find / -name "*.hpp" -type f -delete \
+  && rm -rf /var/lib/apt/lists/* \
+  /autoware/src \ 
+  /autoware/autoware.repos \
+  /root/.local/pipx \
+  /opt/ros/humble/include \
+  /etc/apt/sources.list.d/cuda*.list \
+  /etc/apt/sources.list.d/docker.list \
+  /etc/apt/sources.list.d/nvidia-docker.list \
+  "$HOME"/.cache \
+  /usr/include \
+  /usr/share/doc \ 
+  /usr/lib/gcc \
+  /usr/lib/jvm \
+  /usr/lib/llvm*
+
 # Bugfix rviz2 black-screen problem with some nvidia drivers: https://github.com/ros2/rviz/issues/948
 RUN apt update && apt install -y software-properties-common && add-apt-repository ppa:kisak/kisak-mesa && apt install -y \
   libegl-mesa0 libegl1-mesa-dev libgbm-dev libgbm1 libgl1-mesa-dev libgl1-mesa-dri libglapi-mesa libglx-mesa0 ros-humble-rviz2
