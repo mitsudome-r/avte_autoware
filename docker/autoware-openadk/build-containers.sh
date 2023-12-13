@@ -20,8 +20,9 @@ done
 if [ -n "$option_platform" ]; then
     platform="$option_platform"
 else
-    platform="x86_64"
+    platform="aarch64"
 fi
+
 
 # https://github.com/docker/buildx/issues/484
 export BUILDKIT_STEP_LOG_MAX_SIZE=10000000
@@ -40,7 +41,7 @@ docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
     --set "devel.tags=ghcr.io/autowarefoundation/autoware-openadk:devel-$rosdistro-$platform" \
     --set "prebuilt.tags=ghcr.io/autowarefoundation/autoware-openadk:prebuilt-$rosdistro-$platform"
 
-# Build visualization
+# Build runtime images
 docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
     --set "*.context=$WORKSPACE_ROOT" \
     --set "*.ssh=default" \
@@ -48,7 +49,7 @@ docker buildx bake --load --progress=plain -f "$SCRIPT_DIR/docker-bake.hcl" \
     --set "*.args.PLATFORM=$platform" \
     --set "*.args.ROS_DISTRO=$rosdistro" \
     --set "*.args.BASE_IMAGE=$base_image" \
-    --set "visualizer.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-visualizer-$platform" \
-    visualizer
-
+    --set "planning-control.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-planning-before-$platform" \
+    --set "simulator.tags=ghcr.io/autowarefoundation/autoware-openadk:ces-simulator-$platform" \
+    planning-control simulator
 set +x
