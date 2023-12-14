@@ -12,7 +12,7 @@ artifacts:
             - autoware.repos
           import_path: src
       base_container_image:
-        from: ghcr.io/oguzkaganozt/autoware-openadk:ces-planning-after-aarch64
+        from: ghcr.io/mitsudome-r/autoware-openadk:ces-planning-before-aarch64
       phases:
         - name: init
           exec: "true"
